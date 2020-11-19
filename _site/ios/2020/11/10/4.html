@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Github Login API로 사용자 데이터 불러오기 | Bokyung Seo</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Github Login API로 사용자 데이터 불러오기" />
+<meta name="author" content="Bokyung Seo" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="개인 토이 프로젝트에 깃허브 로그인을 사용할 일이 생겨, 처음으로(!) Login API 사용에 도전해 보았다. 네아로나 카카오 로그인을 먼저 쓰게 될 줄 알았는데 사람 일은 모르는 일이다. 각설하고, 바로 시작해보자." />
+<meta property="og:description" content="개인 토이 프로젝트에 깃허브 로그인을 사용할 일이 생겨, 처음으로(!) Login API 사용에 도전해 보았다. 네아로나 카카오 로그인을 먼저 쓰게 될 줄 알았는데 사람 일은 모르는 일이다. 각설하고, 바로 시작해보자." />
+<link rel="canonical" href="http://localhost:4000/ios/2020/11/10/4.html" />
+<meta property="og:url" content="http://localhost:4000/ios/2020/11/10/4.html" />
+<meta property="og:site_name" content="Bokyung Seo" />
+<meta property="og:image" content="http://localhost:4000/4.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-10T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/4.jpg" />
+<meta property="twitter:title" content="Github Login API로 사용자 데이터 불러오기" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ios/2020/11/10/4.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/profile_1.JPG"},"name":"Bokyung Seo"},"image":"http://localhost:4000/4.jpg","author":{"@type":"Person","name":"Bokyung Seo"},"headline":"Github Login API로 사용자 데이터 불러오기","dateModified":"2020-11-10T00:00:00+09:00","datePublished":"2020-11-10T00:00:00+09:00","description":"개인 토이 프로젝트에 깃허브 로그인을 사용할 일이 생겨, 처음으로(!) Login API 사용에 도전해 보았다. 네아로나 카카오 로그인을 먼저 쓰게 될 줄 알았는데 사람 일은 모르는 일이다. 각설하고, 바로 시작해보자.","url":"http://localhost:4000/ios/2020/11/10/4.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Bokyung Seo" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57" href="/assets/logo/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/assets/logo/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/assets/logo/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/logo/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/assets/logo/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/assets/logo/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/assets/logo/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/logo/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/favicon-16x16.png">
+<link rel="manifest" href="/assets/logo/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/assets/logo/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Bokyung Seo</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/profile_1.JPG" class="author-avatar u-photo align-center" alt="Bokyung Seo">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Bokyung Seo</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:maybutter756@gmail.com">maybutter756@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/Be-beee"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://www.linkedin.com/in/bokyungseo"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a>
+        </li>
+    </ul>
+  </div>
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Github Login API로 사용자 데이터 불러오기</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-11-10T00:00:00+09:00" itemprop="datePublished">
+        Nov 10, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>개인 토이 프로젝트에 깃허브 로그인을 사용할 일이 생겨, 처음으로(!) Login API 사용에 도전해 보았다. 네아로나 카카오 로그인을 먼저 쓰게 될 줄 알았는데 사람 일은 모르는 일이다. <br />
+각설하고, 바로 시작해보자.
+<br /></p>
+
+<p>전체적인 방법은 깃허브에서 공식적으로 제공하는 <a href="https://docs.github.com/en/enterprise-server@2.21/developers/apps/authorizing-oauth-apps">문서</a>를 그대로 따라가면 되지만 처음이라 그런지 어려움이 좀 있었다. 다른 SNS 로그인 API도 크게 다르지 않을 것이라 생각하기에 이 곳에 전체 과정을 기록해두려 한다.
+<br />
+<br /></p>
+
+<h2 id="1-깃허브에-애플리케이션-등록하기">1. 깃허브에 애플리케이션 등록하기</h2>
+<hr />
+
+<p>우선 내가 사용할 애플리케이션을 깃허브에 등록했다. [Settings] - [Developer settings] - [OAuth Apps]에서 [New OAuth App]을 클릭하여 새로운 앱을 생성해주었다.
+<br />
+<img src="/images/20201110_4/github_login_register.png" width="45%" />
+<img src="/images/20201110_4/github_login_register_2.png" width="45%" />
+<br />
+<br />
+Application name에는 애플리케이션 이름을, Homepage URL은 깃헙 저장소 주소를 넣어주었다. <br />
+Authorization callback URL의 경우, <br />
+애플리케이션 프로젝트의 [TARGETS] - [Info]의 [URL Types]를 추가해 아래 사진과 같이 간단히 callback url을 생성할 수 있다.
+<br />
+<img src="/images/20201110_4/github_login_callback_url.png" width="90%" />
+<br />
+<br />
+<br /></p>
+
+<p>앱을 등록하고 나면 아래의 사진과 같이 client ID와 client Secret을 확인할 수 있는 화면이 나타난다. client Secret은 처음에는 생성되어 있지 않으므로 [Generate a new client secret]으로 새로운 키값을 생성시켜주도록 한다.</p>
+
+<p><img src="/images/20201110_4/registered_app_main.png" width="100%" />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<h2 id="2-사용자-권한-요청하기">2. 사용자 권한 요청하기</h2>
+<hr />
+
+<p>모든 준비가 끝났다면, 이후로는 코딩의 영역이다. 간단히 로그인을 테스트하기 위해 화면에 로그인 버튼과 로그인이 되었는지 표시해주는 레이블만 앱 화면에 배치하였다.</p>
+
+<div style="text-align: center;"><img src="/images/20201110_4/simple_appmain.png" width="70%" /></div>
+<p><br />
+<br />
+<br /></p>
+
+<p>로그인 버튼을 터치했을 때 사파리 (외부)앱으로 이동해 사용자의 권한을 요청해야 한다. 따라서 버튼의 IBAction 메서드를 다음과 같이 작성하였다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">loginGithub</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">UIButton</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">clientID</span> <span class="o">=</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">client_id</span>
+    <span class="k">let</span> <span class="nv">scope</span> <span class="o">=</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">scope</span> <span class="c1">// repo user</span>
+    <span class="k">let</span> <span class="nv">urlString</span> <span class="o">=</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">reqAuthUrl</span> <span class="c1">// https://github.com/login/oauth/authorize</span>
+    <span class="k">var</span> <span class="nv">components</span> <span class="o">=</span> <span class="kt">URLComponents</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span><span class="o">!</span>
+    
+    <span class="n">components</span><span class="o">.</span><span class="n">queryItems</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="kt">URLQueryItem</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"client_id"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">clientID</span><span class="p">),</span>
+        <span class="kt">URLQueryItem</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"scope"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">scope</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+    <span class="c1">// UserInfoManager.delegate = self</span>
+    <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>client_id와 client_secret이 다른 곳에서도 사용되었기에 (예를 들어 SceneDelegate…) 아예 ClientLogin struct를 생성하여 그곳에 static 상수 값으로 정의해두었다.<br />
+scope의 경우 프로그래머가 필요한 사용자 권한 범위를 나타내는 것인데 나의 경우 repo, user로 지정하였다.</p>
+
+<p>해당 메서드를 작성하고 애플리케이션을 실행해보면 다음과 같이 사파리 앱으로 잘 넘어가는 것을 확인할 수 있다.(주석으로 처리해 둔 델리게이트 처리는 다음 단계에서 이어서 설명하겠다.)</p>
+
+<div style="text-align: center;">
+	<img src="/images/20201110_4/test1.png" width="30%" />
+	<img src="/images/20201110_4/test2.png" width="30%" />
+	<img src="/images/20201110_4/test3.png" width="30%" />
+</div>
+
+<p>사용자의 권한을 얻어 와서 다시 앱을 열면 깃허브는 code를 보내게 되는데, 이는 10분 후에 만료되므로 받아온 즉시 access token을 요청하도록 처리하였다. 이러한 code는 SceneDelegate 또는 AppDelegate에서 확인할 수 있다.</p>
+
+<p>여기에선 SceneDelegate를 통해 받아온 code를 처리하였다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">scene</span><span class="p">(</span><span class="n">_</span> <span class="nv">scene</span><span class="p">:</span> <span class="kt">UIScene</span><span class="p">,</span> <span class="n">openURLContexts</span> <span class="kt">URLContexts</span><span class="p">:</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">UIOpenURLContext</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URLContexts</span><span class="o">.</span><span class="n">first</span><span class="p">?</span><span class="o">.</span><span class="n">url</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">code</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">absoluteString</span><span class="o">.</span><span class="nf">split</span><span class="p">(</span><span class="nv">separator</span><span class="p">:</span> <span class="s">"="</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">?</span><span class="o">.</span><span class="n">description</span> <span class="p">??</span> <span class="s">""</span>
+
+        <span class="k">if</span> <span class="o">!</span><span class="n">code</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+            <span class="k">var</span> <span class="nv">component</span> <span class="o">=</span> <span class="kt">URLComponents</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">tokenReqUrl</span><span class="p">)</span>
+            <span class="c1">// tokenReqUrl: https://github.com/login/oauth/access_token</span>
+            <span class="k">let</span> <span class="nv">required</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="kt">URLQueryItem</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"client_id"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">client_id</span><span class="p">),</span>
+                <span class="kt">URLQueryItem</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"client_secret"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">ClientLogin</span><span class="o">.</span><span class="n">client_secret</span><span class="p">),</span>
+                <span class="kt">URLQueryItem</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"code"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">code</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">component</span><span class="p">?</span><span class="o">.</span><span class="n">queryItems</span> <span class="o">=</span> <span class="kd">required</span>
+            
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">tokenUrl</span> <span class="o">=</span> <span class="n">component</span><span class="p">?</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+            <span class="k">var</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">tokenUrl</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="s">"application/json"</span><span class="p">,</span> <span class="nv">forHTTPHeaderField</span><span class="p">:</span> <span class="s">"Accept"</span><span class="p">)</span>
+            
+            <span class="k">let</span> <span class="nv">session</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">dataTask</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+                <span class="k">let</span> <span class="nv">successRange</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">..&lt;</span> <span class="mi">300</span>
+                <span class="k">guard</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">,</span> <span class="k">let</span> <span class="nv">statusCode</span> <span class="o">=</span> <span class="p">(</span><span class="n">response</span> <span class="k">as?</span> <span class="kt">HTTPURLResponse</span><span class="p">)?</span><span class="o">.</span><span class="n">statusCode</span><span class="p">,</span> <span class="n">successRange</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">statusCode</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span> <span class="c1">// 에러 없고, 네트워킹에 성공했는지</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">resultData</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">info</span> <span class="o">=</span> <span class="kt">UserInfoManager</span><span class="o">.</span><span class="nf">parseInfo</span><span class="p">(</span><span class="n">resultData</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+                <span class="kt">UserInfoManager</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">info</span> <span class="c1">// 받아온 token 값을 저장</span>
+                <span class="kt">UserInfoManager</span><span class="o">.</span><span class="nf">loginSuccessed</span><span class="p">()</span> <span class="c1">// 로그인 성공</span>
+            <span class="p">}</span>
+            
+            <span class="n">dataTask</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+            
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<p>URLSession을 통해 받아온 token 값을 저장한 후 <code class="language-plaintext highlighter-rouge">loginSuccessed()</code> 함수를 실행하여 로그인 성공 후 애플리케이션에 변화를 주었다.</p>
+
+<p>원래는 token 값을 이용해 다시 사용자 정보를 가져와야 하지만 URLSession을 사용하는 방식 자체는 같으므로 우선 생략하였다.
+<br />
+<br />
+<br /></p>
+
+<h2 id="3-애플리케이션-화면-변화-보여주기">3. 애플리케이션 화면 변화 보여주기</h2>
+<hr />
+<p>로그인이 되었다면 사용자에게 어떤 퍼포먼스를 보여줘야 한다. 화면이 이동된다거나, 사용자 이름을 화면에 표시하여 로그인이 성공적으로 끝났음을 표시해주어야하는 것이다.</p>
+
+<p>여담으로 이번 단계가 이 포스트를 작성하게 된 궁극적인 원인이라 할 수 있겠다.</p>
+
+<p>애플리케이션 화면에 배치해두었던 레이블에 ‘로그인 성공’이라는 문자열을 띄우기 위해 token이 저장된 <code class="language-plaintext highlighter-rouge">UserInfoManager</code>와 <code class="language-plaintext highlighter-rouge">ViewController</code>를 연결하고, 데이터를 주고 받을 필요가 있었다.<br />
+따라서, <code class="language-plaintext highlighter-rouge">LoginDelegate</code> protocol을 작성하여 연결 매개체를 만들었다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">protocol</span> <span class="kt">LoginDelegate</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">loginSucceessed</span><span class="p">()</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<p><code class="language-plaintext highlighter-rouge">UserInfoManager</code>에 <code class="language-plaintext highlighter-rouge">LoginDelegate</code> 타입의 delegate 변수를 생성함으로써 <code class="language-plaintext highlighter-rouge">LoginDelegate</code> 함수를 사용할 수 있도록 했다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="kt">UserInfoManager</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">LoginDelegate</span><span class="p">?</span>
+    <span class="c1">// 생략</span>
+
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">loginSuccessed</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">loginSucceessed</span><span class="p">()</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Login Successed"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<p>한편 ViewController는 LoginDelegate를 상속함으로써 작성해야하는 <code class="language-plaintext highlighter-rouge">loginSuccessed()</code> 함수를 통해 애플리케이션 화면의 레이블을 변경하였다. <br />
+URLSession 내부에서 실행되고 있으므로 레이블을 변경하는 작업을 메인 스레드로 보내주어야 한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">LoginDelegate</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">loginSucceessed</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"Login Successed"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<p>실행해보면 다음과 같이 잘 작동하는 것을 확인할 수 있다! 만세!💃</p>
+
+<div style="text-align: center;">
+	<img src="/images/20201110_4/success1.png" width="45%" />
+	<img src="/images/20201110_4/success2.png" width="45%" />
+</div>
+
+<hr />
+<p>참고: https://docs.github.com/en/enterprise-server@2.21/developers/apps/authorizing-oauth-apps</p>
+
+<p>https://zeddios.tistory.com/1102</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#ios">iOS</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#api">api</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#github">github</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#login">login</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#swift">swift</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ios">ios</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/concurrency/2020/11/10/3.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> 
+  Sync vs. Async
+
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/concurrency/2020/11/11/5.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            
+  Serial vs. Concurrent
+
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020 Bokyung Seo; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p></p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

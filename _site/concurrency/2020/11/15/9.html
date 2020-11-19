@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>디스패치 그룹 | Bokyung Seo</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="디스패치 그룹" />
+<meta name="author" content="Bokyung Seo" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다." />
+<meta property="og:description" content="해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다." />
+<link rel="canonical" href="http://localhost:4000/concurrency/2020/11/15/9.html" />
+<meta property="og:url" content="http://localhost:4000/concurrency/2020/11/15/9.html" />
+<meta property="og:site_name" content="Bokyung Seo" />
+<meta property="og:image" content="http://localhost:4000/9.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-15T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/9.jpg" />
+<meta property="twitter:title" content="디스패치 그룹" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/concurrency/2020/11/15/9.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/profile_1.JPG"},"name":"Bokyung Seo"},"image":"http://localhost:4000/9.jpg","author":{"@type":"Person","name":"Bokyung Seo"},"headline":"디스패치 그룹","dateModified":"2020-11-15T00:00:00+09:00","datePublished":"2020-11-15T00:00:00+09:00","description":"해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다.","url":"http://localhost:4000/concurrency/2020/11/15/9.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Bokyung Seo" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57" href="/assets/logo/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/assets/logo/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/assets/logo/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/logo/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/assets/logo/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/assets/logo/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/assets/logo/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/logo/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/favicon-16x16.png">
+<link rel="manifest" href="/assets/logo/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/assets/logo/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Bokyung Seo</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/profile_1.JPG" class="author-avatar u-photo align-center" alt="Bokyung Seo">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Bokyung Seo</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:maybutter756@gmail.com">maybutter756@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/Be-beee"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://www.linkedin.com/in/bokyungseo"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a>
+        </li>
+    </ul>
+  </div>
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">6. 디스패치 그룹</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-11-15T00:00:00+09:00" itemprop="datePublished">
+        Nov 15, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>해당 포스팅은 <a href="https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation">iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해</a> 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다.</em>
+<br />
+<br /></p>
+
+<h2 id="디스패치-그룹의-개념">디스패치 그룹의 개념</h2>
+<hr />
+<p>디스패치 그룹은 여러 작업을 유사한 기준으로 묶어 묶인 작업이 끝나는 시기가 필요할 떄 사용한다.</p>
+
+<p>다음의 코드처럼 사용할 수 있다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nv">group1</span> <span class="o">=</span> <span class="kt">DispatchGroup</span><span class="p">()</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="p">)</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span> <span class="c1">// 작업을 보낼 때 그룹 꼬리표를 붙여주는 느낌</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="p">)</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="n">group1</span><span class="o">.</span><span class="nf">notify</span><span class="p">(</span><span class="nv">queue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="p">){</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="k">in</span>
+	<span class="c1">// 모든 작업이 끝났을 때 해당 클로저 실행</span>
+	<span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">textLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"모든 작업이 완료되었습니다."</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<h3 id="동기적인-기다림">동기적인 기다림</h3>
+<hr />
+<p>어떤 이유로 그룹의 완료 알림에 비동기적으로 응답할 수 없는 경우, 대신 디스패치 그룹에서 <code class="language-plaintext highlighter-rouge">wait()</code> 메서드를 사용할 수 있다.<br />
+모든 작업이 완료될 때까지 현재 대기열을 차단하는 동기적인 방법으로,<br />
+작업이 완료될 때까지, 얼마나 오래 기다릴지 기다리는 시간을 지정하는 선택적 파라미터가 필요하다.<br />
+기다리는 시간을 지정하지 않으면 무제한 대기한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nv">group1</span> <span class="o">=</span> <span class="kt">DispatchGroup</span><span class="p">()</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="p">)</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="p">)</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+<span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="k">if</span> <span class="n">group1</span><span class="o">.</span><span class="nf">wait</span><span class="p">(</span><span class="nv">timeout</span><span class="p">:</span> <span class="o">.</span><span class="nf">now</span><span class="p">()</span><span class="o">+</span><span class="mi">60</span><span class="p">)</span> <span class="o">==</span> <span class="o">.</span><span class="n">timeOut</span> <span class="p">{</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"작업이 60초 안에 종료하지 않았습니다."</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>작업이 제때 끝나지 않았을 때 처리하기 유용하다.
+<br />
+<br />
+<br /></p>
+
+<h2 id="디스패치-그룹의-사용비동기-디스패치-그룹">디스패치 그룹의 사용(비동기 디스패치 그룹)</h2>
+<hr />
+<p>디스패치 그룹 클로저 내에서 비동기 함수를 호출할 때 주의가 필요하다. 내부에서 비동기적으로 다른 메서드를 큐로 보냈기 때문에 종료 시점이 잘못 인식될 수 있다.
+종료 시점을 명확히 표기하기 위해 <code class="language-plaintext highlighter-rouge">enter()</code>, <code class="language-plaintext highlighter-rouge">leave()</code> 메서드를 통한 출입처리가 필요하다.</p>
+<div style="text-align: center;">
+	<img src="/images/20201115_9/1.png" width="80%" />
+</div>
+<p><br /></p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">queue</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">group1</span><span class="o">.</span><span class="nf">enter</span><span class="p">()</span> <span class="c1">// 입장</span>
+	<span class="nf">someAsyncMethod</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">group1</span><span class="o">.</span><span class="nf">leave</span><span class="p">()</span> <span class="c1">// 퇴장</span>
+	<span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br />
+<br />
+<br /></p>
+
+<h2 id="dispatch-workitem">Dispatch workItem</h2>
+<hr />
+<ul>
+  <li>작업을 미리 정의해두고 사용하는 큐에 제출하기 위한 객체(class)</li>
+  <li>빈약한 취소 기능, 순서 기능을 내장하고 있다.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nv">item1</span> <span class="o">=</span> <span class="kt">DispatchWorkItem</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">utility</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"task1 출력"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">queue</span> <span class="o">=</span> <span class="kt">DispatchQueue</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"com.sbk.serial"</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">execute</span><span class="p">:</span> <span class="n">item1</span><span class="p">)</span> <span class="c1">// 객체이므로 따로 실행해줘야 한다.</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h3 id="빈약한-취소-기능">빈약한 취소 기능</h3>
+
+<p><code class="language-plaintext highlighter-rouge">cancel()</code> 내장 메서드를 갖고 있다.</p>
+<ul>
+  <li>작업이 아직 시작되지 않은 경우 작업을 제거한다.</li>
+  <li>작업이 실행중인 경우 <code class="language-plaintext highlighter-rouge">isCancelled</code> 속성이 <code class="language-plaintext highlighter-rouge">true</code>로 설정된다. (직접적으로 실행 중인 작업이 멈추는 것은 아니다.)
+<br />
+<br /></li>
+</ul>
+
+<h3 id="빈약한-순서-기능">빈약한 순서 기능</h3>
+
+<p><code class="language-plaintext highlighter-rouge">notify(queue: 실행할 큐, execute: 디스패치 아이템)</code> 내장 메서드를 갖고 있다.</p>
+<ul>
+  <li>다음에 실행할 아이템(작업)을 지정
+<br />
+<br />
+<br /></li>
+</ul>
+
+<h2 id="semaphore">Semaphore</h2>
+<hr />
+<ul>
+  <li>공유 리소스에 접근 가능한 작업 수를 제한해야 할 경우 사용한다.</li>
+  <li>한 번에 실행하는 작업의 갯수를 제한한다.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nv">semaphore</span> <span class="o">=</span> <span class="kt">DispatchSemaphore</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">queue</span><span class="o">.</span><span class="nf">async</span><span class="p">(</span><span class="nv">group</span><span class="p">:</span> <span class="n">group1</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">group1</span><span class="o">.</span><span class="nf">enter</span><span class="p">()</span>
+	<span class="n">semaphore</span><span class="o">.</span><span class="nf">wait</span><span class="p">()</span> <span class="c1">// 일단 기다린다</span>
+	<span class="n">someAsyncMethod</span> <span class="p">{</span>
+		<span class="n">group1</span><span class="o">.</span><span class="nf">leave</span><span class="p">()</span>
+		<span class="n">semaphore</span><span class="o">.</span><span class="nf">signal</span><span class="p">()</span> <span class="c1">//다음 작업 시작을 위한 시그널</span>
+	<span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<hr />
+<p><em>이미지 및 코드 참고: <a href="https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation">https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation</a></em></p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#concurrency">Concurrency</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#concurrency">concurrency</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#swift">swift</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ios">ios</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/ios/2020/11/14/8.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> rootViewController 지정하기(iOS13 이후)
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/concurrency/2020/11/16/10.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            
+  동시성과 관련된 문제
+
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020 Bokyung Seo; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p></p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

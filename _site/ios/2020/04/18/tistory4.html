@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Delegate Pattern | Bokyung Seo</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Delegate Pattern" />
+<meta name="author" content="Bokyung Seo" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다." />
+<meta property="og:description" content="개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다." />
+<link rel="canonical" href="http://localhost:4000/ios/2020/04/18/tistory4.html" />
+<meta property="og:url" content="http://localhost:4000/ios/2020/04/18/tistory4.html" />
+<meta property="og:site_name" content="Bokyung Seo" />
+<meta property="og:image" content="http://localhost:4000/7.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-18T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/7.jpg" />
+<meta property="twitter:title" content="Delegate Pattern" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ios/2020/04/18/tistory4.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/profile_1.JPG"},"name":"Bokyung Seo"},"image":"http://localhost:4000/7.jpg","author":{"@type":"Person","name":"Bokyung Seo"},"headline":"Delegate Pattern","dateModified":"2020-04-18T00:00:00+09:00","datePublished":"2020-04-18T00:00:00+09:00","description":"개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다.","url":"http://localhost:4000/ios/2020/04/18/tistory4.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Bokyung Seo" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57" href="/assets/logo/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/assets/logo/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/assets/logo/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/logo/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/assets/logo/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/assets/logo/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/assets/logo/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/logo/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/favicon-16x16.png">
+<link rel="manifest" href="/assets/logo/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/assets/logo/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Bokyung Seo</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/profile_1.JPG" class="author-avatar u-photo align-center" alt="Bokyung Seo">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Bokyung Seo</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:maybutter756@gmail.com">maybutter756@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/Be-beee"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://www.linkedin.com/in/bokyungseo"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a>
+        </li>
+    </ul>
+  </div>
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Delegate Pattern</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-04-18T00:00:00+09:00" itemprop="datePublished">
+        Apr 18, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>개인적으로 정리한 내용을 기록한 글입니다. <a href="https://be-beee.tistory.com">티스토리 블로그</a>의 글을 마크다운 형식으로 재작성하였습니다.</em> <br /><br /></p>
+
+<p>Delegate Pattern은 다른 곳에 실제로 구현할 내용을 맡겨 놓고 규격만 정해 전달하는 패턴을 의미한다.
+규격은 protocol을 이용해 정의할 수 있는데, 이는 자바의 인터페이스와 유사하다고 볼 수 있다.</p>
+
+<p>다음과 같이 스토리보드를 구성한다고 할 때,</p>
+<div style="text-align: center;">
+	<img src="/images/20200418_4/storyboard.png" width="80%" />
+</div>
+<p><br /><br />
+스토리보드 구성
+Button을 통해 이동한 두번째 뷰의 텍스트 필드에 입력한 내용이 첫번째 뷰의 레이블에 나타나도록 구현하고자 한다.
+이렇게  여러 뷰가 있을 때 하나의 뷰에서 다른 뷰로 데이터 전달이 필요할 때 사용자가 직접 델리게이트를 정의하여 그 기능을 구현할 수 있다.</p>
+
+<p>우선, 입력된 데이터를 불러오기 위한 메서드가 포함된 델리게이트를 정의한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">protocol</span> <span class="kt">InputData</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">load</span><span class="p">(</span><span class="n">_</span> <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<p>두번째로, 델리게이트 변수를 뷰 컨트롤러 클래스에 선언한다. 델리게이트 변수를 선언함으로써 내부 메서드를 사용할 수 있게 된다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="kt">InputViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">InputData</span><span class="p">?</span> <span class="c1">// 델리게이트 변수 생성</span>
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<p>텍스트 필드의 내용이 변할 때마다 델리게이트 메서드를 호출하기 위해 IBAction 메서드를 작성한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">textChanged</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">UITextField</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">load</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">text</span> <span class="p">??</span> <span class="s">""</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<p>이렇게만 해놓으면 텍스트필드의 내용이 전달되어 레이블에 나타날 것 같지만, 그렇지 않다.
+델리게이트를 정의만 해놓았을 뿐, 메서드에 대한 구현을 하지 않았기 때문이다. 또한, 레이블의 텍스트를 바꾸려면 UILabel 변수의 text 프로퍼티 값을 변경해야하는데, 지금까지의 코드 작성에서는 그러한 내용이 하나도 들어가 있지 않았다.</p>
+
+<p>정리해보자면,</p>
+
+<figure class="highlight"><pre><code class="language-markdown" data-lang="markdown">첫번째 뷰와 델리게이트의 연결
+델리게이트 메서드 구현
+첫번째 뷰의 레이블 변수 설정</code></pre></figure>
+
+<p>위와 같은 작업이 추가로 더 필요하다.
+<br />
+<br /></p>
+
+<p>첫번째 뷰와 델리게이트의 연결을 위해 prepare 메서드를 override 한 후 내용을 작성한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="k">for</span> <span class="nv">segue</span><span class="p">:</span> <span class="kt">UIStoryboardSegue</span><span class="p">,</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="n">segue</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="s">"inputSeg"</span> <span class="p">{</span>
+    
+        <span class="k">let</span> <span class="nv">inputVC</span> <span class="o">=</span> <span class="n">segue</span><span class="o">.</span><span class="n">destination</span> <span class="k">as!</span> <span class="kt">InputViewController</span>
+        <span class="n">inputVC</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+        
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>세그웨이의 목적지를 두번째 뷰 컨트롤러인 InputViewController로 타입캐스팅 후 delegate 프로퍼티를 첫번째 뷰 컨트롤러인 self로 지정한다.</p>
+
+<p>이후, 첫번째 뷰가 델리게이트를 상속 받도록 하고 델리게이트 메서드를 구현한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">InputData</span> <span class="p">{</span>   
+    <span class="kd">@IBOutlet</span> <span class="k">var</span> <span class="nv">lblId</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+    <span class="kd">func</span> <span class="nf">load</span><span class="p">(</span><span class="n">_</span> <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">lblId</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="p">}</span>
+	<span class="c1">// ...중략</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<p>실행 결과는 다음과 같다.</p>
+<div style="text-align: center;">
+	<img src="/images/20200418_4/result.png" width="70%" />
+</div>
+<p><br /><br /></p>
+
+<hr />
+<p><em>참고: <a href="https://www.inflearn.com/course/ios">https://www.inflearn.com/course/ios</a></em></p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#ios">iOS</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#swift">swift</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ios">ios</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/ios/2020/04/14/tistory3.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> Gesture
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/ios/2020/04/18/tistory5.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Alert
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020 Bokyung Seo; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p></p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

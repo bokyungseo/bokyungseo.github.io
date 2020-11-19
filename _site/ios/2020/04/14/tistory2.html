@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Unwind Segue | Bokyung Seo</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Unwind Segue" />
+<meta name="author" content="Bokyung Seo" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다." />
+<meta property="og:description" content="개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다." />
+<link rel="canonical" href="http://localhost:4000/ios/2020/04/14/tistory2.html" />
+<meta property="og:url" content="http://localhost:4000/ios/2020/04/14/tistory2.html" />
+<meta property="og:site_name" content="Bokyung Seo" />
+<meta property="og:image" content="http://localhost:4000/5.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-14T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/5.jpg" />
+<meta property="twitter:title" content="Unwind Segue" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ios/2020/04/14/tistory2.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/profile_1.JPG"},"name":"Bokyung Seo"},"image":"http://localhost:4000/5.jpg","author":{"@type":"Person","name":"Bokyung Seo"},"headline":"Unwind Segue","dateModified":"2020-04-14T00:00:00+09:00","datePublished":"2020-04-14T00:00:00+09:00","description":"개인적으로 정리한 내용을 기록한 글입니다. 티스토리 블로그의 글을 마크다운 형식으로 재작성하였습니다.","url":"http://localhost:4000/ios/2020/04/14/tistory2.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Bokyung Seo" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57" href="/assets/logo/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/assets/logo/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/assets/logo/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/logo/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/assets/logo/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/assets/logo/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/assets/logo/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/logo/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/favicon-16x16.png">
+<link rel="manifest" href="/assets/logo/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/assets/logo/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Bokyung Seo</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/profile_1.JPG" class="author-avatar u-photo align-center" alt="Bokyung Seo">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Bokyung Seo</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:maybutter756@gmail.com">maybutter756@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/Be-beee"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://www.linkedin.com/in/bokyungseo"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a>
+        </li>
+    </ul>
+  </div>
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Unwind Segue</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-04-14T00:00:00+09:00" itemprop="datePublished">
+        Apr 14, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>개인적으로 정리한 내용을 기록한 글입니다. <a href="https://be-beee.tistory.com">티스토리 블로그</a>의 글을 마크다운 형식으로 재작성하였습니다.</em> <br /><br /></p>
+
+<p>네비게이션 컨트롤러를 다루게 되면 여러 뷰가 쌓이게 되는 경우가 있다. 직전의 뷰로 돌아가기 위해서는 자동으로 생성되는 Back 버튼을 이용하면 되지만 바로 첫번째 뷰로 이동하기 위해서는 코드 상의 간단한 작업이 필요하다. 바로 unwind segway이다.
+다음과 같은 상황이 있다고 가정해보자.</p>
+<div style="text-align: center;">
+	<img src="/images/20200414_2/nav.png" width="80%" />
+</div>
+<p><br /><br /></p>
+
+<p>이렇게 여러 뷰가 쌓여있는 상황에서, 세번째 뷰에서 두번째 뷰로 이동하기 위해서는 Back 버튼(1)을 활용하면 된다.
+첫번째 뷰로 이동하기 위해서는 이전의 첫번째 뷰와 두번째 뷰에서 그랬던 것 처럼 화면 화면 중앙의 버튼(2)을 첫번째 뷰와 연결하여 새로운 세그웨이를 생성하면 될 것처럼 보인다. 그러나, 이러한 방법은 이미 쌓여있는 뷰 위에 첫번째 뷰를 한번 더 푸시하는 방식이 되어버린다.</p>
+
+<p>이전에 쌓여있던 모든 뷰를 탈출하고 첫번째 뷰로 돌아가기 위해서는 우선, ViewController.swift 파일 내에  IBAction 메서드를 추가한다.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">unwindToMain</span><span class="p">(</span><span class="n">_</span> <span class="nv">segue</span><span class="p">:</span> <span class="kt">UIStoryboardSegue</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span> 
+    <span class="c1">//이 함수를 새로 작성한다.</span>
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>그 후 함수를 호출할 매개체가 되기를 원하는 대상(위의 경우, 화면 중앙의 버튼(2))을 뷰 컨트롤러의 Exit에 연결하여 작성한 메서드가 나타나는지 확인하고, 선택한다.
+대상과 unwind 메서드가 연결되었다면 대상 우클릭시 다음과 같이 나타나게 될 것이다.</p>
+
+<p>이렇게 연결 되었다면 완성.</p>
+
+<p>여담으로 Back 버튼 외에 다른 버튼으로 직전의 뷰로 이동하고 싶을 경우 popViewController(animated:) 메서드를 호출하면 된다.
+화면 이동 시 쌓이게 되는 점도 그렇고 스택의 원리를 생각하면 이해하기 쉬울 것 같다.</p>
+
+<hr />
+<p><em>참고: <a href="https://www.inflearn.com/course/ios">https://www.inflearn.com/course/ios</a></em></p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#ios">iOS</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#swift">swift</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ios">ios</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/ios/2020/04/14/tistory-1.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> ViewController LifeCycle
+
+          </span>
+        </a>
+      
+
+      
+        <a class="post-next" href="/ios/2020/04/14/tistory3.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Gesture
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020 Bokyung Seo; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p></p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

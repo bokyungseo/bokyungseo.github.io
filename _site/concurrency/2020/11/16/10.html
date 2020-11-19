@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>동시성과 관련된 문제 | Bokyung Seo</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="동시성과 관련된 문제" />
+<meta name="author" content="Bokyung Seo" />
+<meta property="og:locale" content="ko" />
+<meta name="description" content="해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다." />
+<meta property="og:description" content="해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다." />
+<link rel="canonical" href="http://localhost:4000/concurrency/2020/11/16/10.html" />
+<meta property="og:url" content="http://localhost:4000/concurrency/2020/11/16/10.html" />
+<meta property="og:site_name" content="Bokyung Seo" />
+<meta property="og:image" content="http://localhost:4000/11.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-16T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/11.jpg" />
+<meta property="twitter:title" content="동시성과 관련된 문제" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/concurrency/2020/11/16/10.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/profile_1.JPG"},"name":"Bokyung Seo"},"image":"http://localhost:4000/11.jpg","author":{"@type":"Person","name":"Bokyung Seo"},"headline":"동시성과 관련된 문제","dateModified":"2020-11-16T00:00:00+09:00","datePublished":"2020-11-16T00:00:00+09:00","description":"해당 포스팅은 iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다.","url":"http://localhost:4000/concurrency/2020/11/16/10.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Bokyung Seo" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57" href="/assets/logo/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/assets/logo/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/assets/logo/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/logo/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/assets/logo/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/assets/logo/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/assets/logo/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/logo/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/favicon-16x16.png">
+<link rel="manifest" href="/assets/logo/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/assets/logo/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Begin selecting skin -->
+
+  <script>
+    const hour = (new Date()).getHours();
+    let filename = "";
+    if (hour >= 5 && hour < 7) {
+      filename = "/assets/css/skin-sunrise.css";
+    } else if (hour >= 7 && hour < 17) {
+      filename = "/assets/css/skin-daylight.css";
+    } else if (hour >= 17 && hour < 19) {
+      filename = "/assets/css/skin-sunset.css";
+    } else {
+      filename = "/assets/css/skin-midnight.css";
+    }
+    const elem = document.createElement("link");
+    elem.setAttribute("rel", "stylesheet");
+    elem.setAttribute("type", "text/css");
+    elem.setAttribute("href", filename);
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  </script>
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Bokyung Seo</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <div class="sidebar-section"><img src="/profile_1.JPG" class="author-avatar u-photo align-center" alt="Bokyung Seo">
+  </div>
+
+<div class="sidebar-section">
+  <ul class="contact-list">
+    <li>
+        <i class="sidebar-icon fas fa-at"></i>
+        <span class="contact-info p-name">Bokyung Seo</span>
+      </li>
+    <li>
+        <i class="sidebar-icon fas fa-envelope"></i>
+        <a class="contact-info u-email" href="mailto:maybutter756@gmail.com">maybutter756@gmail.com</a>
+      </li>
+    
+  </ul>
+</div>
+
+<div class="sidebar-section feed-subscribe">
+  <a href="/feed.xml">
+    <i class="sidebar-icon fas fa-rss"></i><span>Subscribe</span>
+  </a>
+</div>
+
+<div class="sidebar-section">
+    <ul class="social-icons">
+      <li>
+          <a class="social-icon" href="https://github.com/Be-beee"><i class="fab fa-github fa-2x" title="GitHub"></i></a>
+        </li><li>
+          <a class="social-icon" href="https://www.linkedin.com/in/bokyungseo"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a>
+        </li>
+    </ul>
+  </div>
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">7. 동시성과 관련된 문제</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-11-16T00:00:00+09:00" itemprop="datePublished">
+        Nov 16, 2020
+      </time></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>해당 포스팅은 <a href="https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation">iOS Concurrency(동시성) 프로그래밍, 동기 비동기 처리 그리고 GCD/Operation - 디스패치큐와 오퍼레이션큐의 이해</a> 강의를 수강하고 개인적으로 정리한 내용을 기록한 것 입니다.</em>
+<br />
+<br /></p>
+
+<p>동시성과 관련된 문제란 <strong>2개 이상의 스레드를 사용</strong>하면서, <strong>동일한 메모리 접근</strong> 등으로 인해 발생할 수 있는 문제들을 의미하는 것으로, 실행 시마다 항상 같은 순서로 발생하는 것이 아니기 때문에 디버그 하기가 어렵다.</p>
+
+<figure class="highlight"><pre><code class="language-markdown" data-lang="markdown">상반되는 개념 - Thread-Safety
+여러 스레드가 동시에 쓰여도 안전하다는 의미.
+동시적 처리를 하면서도 한번에 한 개의 스레드만 접근 가능 하도록 처리하여 (경쟁 상황의) 문제없이 스레드를 안전하게 사용하는 것.</code></pre></figure>
+
+<p><br />
+<br />
+<br /></p>
+
+<h2 id="race-condition-경쟁-상황">Race Condition (경쟁 상황)</h2>
+<hr />
+<p>다른 스레드에 놓인 2개 이상의 작업들이 공통 변수(메모리)에 접근하게 될 때 발생
+<br />
+<br />
+<br /></p>
+
+<h2 id="deadlocks-교착-상태">Deadlocks (교착 상태)</h2>
+<hr />
+<div style="text-align: center;">
+	<img src="/images/20201116_10/deadlock.png" width="80%" />
+</div>
+<p><br /></p>
+
+<h3 id="교착상태의-다양한-발생-가능성">교착상태의 다양한 발생 가능성</h3>
+<ul>
+  <li>동기 작업이 현재의 스레드가 필요한 경우</li>
+  <li>앞선 작업이 현재의 스레드가 필요한 경우</li>
+  <li>여러 개의 세마포어가 존재할 때, 순서 잘못 설계 등
+<br />
+<br /></li>
+</ul>
+
+<h3 id="문제-해결">문제 해결</h3>
+<p>시리얼 큐로 해결 가능(세마포어와 같은 제한된 리소스 순서가 존재할 시 주의해야 한다.)
+<br />
+<br />
+<br /></p>
+
+<h2 id="priority-inversion-우선-순위의-뒤바뀜">Priority Inversion (우선 순위의 뒤바뀜)</h2>
+<hr />
+<p>우선순위가 각각 다른 스레드 사이에서 하나의 스레드가 접근할 때 잠금 처리 되는 공통 변수에 접근할 때 발생<br />
+<strong>낮은 우선 순위의 작업이 자원을 배타적으로 사용하고 있을 때</strong>, (다른 작업이 자원을 사용하지 못하게 막고 있으므로) 작업의 우선 순위가 바뀔 수 있음
+<br />
+<br /></p>
+
+<h3 id="우선-순위-뒤바뀜의-다양한-발생-가능성">우선 순위 뒤바뀜의 다양한 발생 가능성</h3>
+<ul>
+  <li>시리얼큐에서 높은 우선순위 작업이 낮은 우선순위의 뒤에 보내지는 경우</li>
+  <li>낮은 우선순위의 작업이 높은 우선순위가 필요한 자원을 잠그고 있는 경우 (lock 코드, 세마포어 등)</li>
+  <li>높은 우선순위 작업이 낮은 작업에 의존하는 경우
+<br />
+<br /></li>
+</ul>
+
+<h3 id="문제-해결-1">문제 해결</h3>
+<ul>
+  <li>1차적으로 GCD가 우선 순위를 조정해서 알아서 해결(낮은 우선순위 작업의 우선 순위를 높여서 우선 처리)</li>
+  <li>(안전하게) 공유된 자원 접근 시 동일한 QoS 사용
+<br />
+<br /></li>
+</ul>
+
+<hr />
+<p><em>이미지 출처: <a href="https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation">https://www.inflearn.com/course/iOS-Concurrency-GCD-Operation</a></em></p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#concurrency">Concurrency</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#concurrency">concurrency</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#swift">swift</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ios">ios</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/concurrency/2020/11/15/9.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> 
+  디스패치 그룹
+
+
+          </span>
+        </a>
+      
+
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020 Bokyung Seo; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p></p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>
